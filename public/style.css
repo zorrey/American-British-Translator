@@ -1,7 +1,9 @@
 code {
   background: #d0d0d5;
 }
-
+span{
+  color: green;
+}
 .container {
   display: flex;
   flex-direction: column;
