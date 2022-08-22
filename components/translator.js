@@ -79,7 +79,8 @@ class Translator {
     convay(mode, sentence){
         sentence = sentence ;
         console.log("sentence", sentence)
-        var toConvay = sentence;
+        var toConvay = [sentence, sentence];
+        
         let wordNumber = sentence.split(' ').length;
         console.log(wordNumber);
         let time = sentence.match(regex);
@@ -93,7 +94,7 @@ class Translator {
         if(mode == 'american-to-british'){       
 
                 transData.forEach( word => {
-                    if(word[0].slice(-1) == 'y'  && word[0].slice(-2,-1)!='a'
+                    if( word[0].slice(-1) == 'y'  && word[0].slice(-2,-1)!='a'
                                             && word[0].slice(-2,-1)!='e'
                                             && word[0].slice(-2,-1)!='i'
                                             && word[0].slice(-2,-1)!='o'
@@ -101,8 +102,8 @@ class Translator {
                                         ) 
                     {
                         var wordregex = new RegExp(`\\b${word[0].slice(0,-1)}y*(ies)*(\\b)`,'i'+'g');
-                    }
-                        else{var wordregex = new RegExp(`\\b${word[0]}(s)*(\\b)`,'i'+'g');                
+                    }   
+                    else { var wordregex = new RegExp(`\\b${word[0]}(s)*(\\b)`,'i'+'g');                
                     }
                    
                     //console.log(wordregex)
@@ -115,8 +116,9 @@ class Translator {
                        
                         temp.forEach(item => {
                             
-                           sentence = sentence.replace(wordregex, " ");
-                        toConvay = toConvay.replace(wordregex, `${highString}${this.compare(item, word, mode)}</span>`)
+                        sentence = sentence.replace(wordregex, " ");
+                        toConvay[1] = toConvay[1].replace(wordregex, `${highString}${this.compare(item, word, mode)}</span>`);
+                        toConvay[0] = toConvay[0].replace(wordregex, `${this.compare(item, word, mode)}`);
                             //console.log('compare - item, word[]: --> ', item, word, mode)
                             //console.log('this.compare - item, word[]: --> ', this.compare(item, word, mode))
                             //console.log("toConvay:  ", toConvay);
@@ -135,7 +137,8 @@ class Translator {
                      
                     arr.forEach(item => {
                        sentence = sentence.replace(item , " ") ;
-                       toConvay = toConvay.replace(item , `${highString}${title[1][0].toUpperCase() + title[1].slice(1) }</span>`) ;  
+                       toConvay[0] = toConvay[0].replace(item , `${title[1][0].toUpperCase() + title[1].slice(1) }`) ;  
+                       toConvay[1] = toConvay[1].replace(item , `${highString}${title[1][0].toUpperCase() + title[1].slice(1) }</span>`) ;  
                        titles.push(title[1][0].toUpperCase() + title[1].slice(1)) ;
                     })
                        // titles.push(sentence.match(wordregex))
@@ -147,7 +150,8 @@ class Translator {
             
             if(time!=null){
                 time.forEach(time=>{
-                toConvay = toConvay.replace(time , `<span class="highlight">${time.replace(':', '.')}</span>`)
+                toConvay[0] = toConvay[0].replace(time , `${time.replace(':', '.')}`)
+                toConvay[1] = toConvay[1].replace(time , `${highString}${time.replace(':', '.')}</span>`)
                 })            
             }
 
@@ -180,10 +184,11 @@ class Translator {
                         console.log('temp: ', temp) 
                         temp.forEach( item => {                            
                         sentence = sentence.replace(wordregex, " ");
-                        toConvay = toConvay.replace(wordregex, `<span class="highlight">${this.compare(item, word, mode)}</span>`)
-                            console.log('compare - item, word[]: --> ', item, word)
-                            console.log('this.compare - item, word[]: --> ', this.compare(item, word, mode))
-                            console.log("toConvay:  ", toConvay);
+                        toConvay[0] = toConvay[0].replace(wordregex, `${this.compare(item, word, mode)}`)
+                        toConvay[1] = toConvay[1].replace(wordregex, `${highString}${this.compare(item, word, mode)}</span>`)
+                            //console.log('compare - item, word[]: --> ', item, word)
+                            //console.log('this.compare - item, word[]: --> ', this.compare(item, word, mode))
+                            //console.log("toConvay:  ", toConvay);
                         words.push(this.compare(item, word, mode));
                     })
                         
@@ -197,7 +202,8 @@ class Translator {
                     if(sentence.match(wordregex)!=null) {
                     let arr = sentence.match(wordregex);
                                 console.log('arr:  ', arr)
-                     toConvay = toConvay.replace(wordregex, `${highString}${title[0][0].toUpperCase() + title[0].slice(1)}</span>`)        
+                     toConvay[0] = toConvay[0].replace(wordregex, `${title[0][0].toUpperCase() + title[0].slice(1)}`)        
+                     toConvay[1] = toConvay[1].replace(wordregex, `${highString}${title[0][0].toUpperCase() + title[0].slice(1)}</span>`)        
                      arr.forEach(item => {
                         //console.log(item)
                     sentence = sentence.replace(wordregex, " ") ;                     
@@ -212,14 +218,19 @@ class Translator {
             
             if(time!=null){
                 time.forEach(time=>{
-                toConvay = toConvay.replace(time , `<span class="highlight">${time.replace('.', ':')}</span>`)
+                toConvay[0] = toConvay[0].replace(time , `${time.replace('.', ':')}`)
+                toConvay[1] = toConvay[1].replace(time , `${highString}${time.replace('.', ':')}</span>`)
                 })            
             }
         }
-       
+       toConvay[0] = toConvay[0][0].toUpperCase() + toConvay[0].slice(1);
+       toConvay[1] = (toConvay[1][0]=='<')? toConvay[1].slice(0, highLength) + toConvay[1][highLength].toUpperCase() + toConvay[1].slice(highLength+1) : 
+                                            toConvay[1][0].toUpperCase() + toConvay[1].slice(1);
+
                     // console.log('sentence 2 : ', toConvay)
-        return (toConvay[0]=='<')? toConvay.slice(0, highLength)+  toConvay[highLength].toUpperCase() + toConvay.slice(highLength+1) : 
-                                    toConvay[0].toUpperCase() + toConvay.slice(1);
+    return toConvay;
+        /* return (toConvay[0]=='<')? toConvay.slice(0, highLength)+  toConvay[highLength].toUpperCase() + toConvay.slice(highLength+1) : 
+                                    toConvay[0].toUpperCase() + toConvay.slice(1); */
     }    
 }
 

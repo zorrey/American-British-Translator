@@ -14,13 +14,14 @@ module.exports = function (app) {
 
       if(locale=='american-to-british' || locale == 'british-to-american'){
         console.log('locale, text', locale, text)
-        let newText = translator.convay(locale, text);
+        let newText = translator.convay(locale, text)[0];
+        let newTextHignlight = translator.convay(locale, text)[1];
         console.log('newText1: ', newText)
        // console.log('text.toLowerCase() === newText.toLowerCase()', text.toLowerCase() === newText.toLowerCase());
        // console.log('text.toLowerCase() , newText.toLowerCase()', text.toLowerCase() , newText.toLowerCase());
         if(text.toLowerCase().trim() === newText.toLowerCase().trim())  {res.json({text: text, translation: "Everything looks good to me!"}); return;}
         console.log('newText1: ', newText)
-        return res.json({translation: newText});
+        return res.json({text: text , translation: newTextHignlight});
       } else 
       return res.json({error: 'Invalid value for locale field'});
       
